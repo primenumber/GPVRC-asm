@@ -303,21 +303,45 @@ Instruction assemble_impl(
   } else if (op == "umul") {
     op_type = OperandsType::Reg3;
     op_code = 0x02;
+  } else if (op == "imul") {
+    op_type = OperandsType::Reg3;
+    op_code = 0x03;
   } else if (op == "udiv") {
     op_type = OperandsType::Reg3;
     op_code = 0x04;
   } else if (op == "umod") {
     op_type = OperandsType::Reg3;
     op_code = 0x06;
+  } else if (op == "addi") {
+    op_type = OperandsType::Reg2Imm8;
+    op_code = 0x00;
+  } else if (op == "subi") {
+    op_type = OperandsType::Reg2Imm8;
+    op_code = 0x01;
   } else if (op == "shli") {
     op_type = OperandsType::Reg2Imm8;
     op_code = 0x04;
+  } else if (op == "shri") {
+    op_type = OperandsType::Reg2Imm8;
+    op_code = 0x05;
   } else if (op == "load") {
     op_type = OperandsType::Reg2;
     op_code = 0x000;
   } else if (op == "store") {
     op_type = OperandsType::Reg2;
     op_code = 0x001;
+  } else if (op == "jez") {
+    op_type = OperandsType::Reg2;
+    op_code = 0x010;
+  } else if (op == "jnz") {
+    op_type = OperandsType::Reg2;
+    op_code = 0x011;
+  } else if (op == "not") {
+    op_type = OperandsType::Reg2;
+    op_code = 0x100;
+  } else if (op == "neg") {
+    op_type = OperandsType::Reg2;
+    op_code = 0x101;
   } else if (op == "cid") {
     op_type = OperandsType::Reg1;
     op_code = 0x000;
@@ -333,6 +357,9 @@ Instruction assemble_impl(
   } else if (op == "jnzi") {
     op_type = OperandsType::Reg1Imm16;
     op_code = 0x3;
+  } else if (op == "jmpi") {
+    op_type = OperandsType::Imm16;
+    op_code = 0x0;
   } else if (op == "exit") {
     op_type = OperandsType::Empty;
     op_code = 0xffff;
