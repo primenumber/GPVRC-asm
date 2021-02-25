@@ -5,7 +5,7 @@ GPVRC(General Purpose VRChat) assembler
 
 Harvard architecture
 
-Instruction length: 24-bit
+Instruction length: 24-bit, RGB pixel (R is LSB-side, B is MSB-side)
 Instruction memory address space: 65,536 insts
 
 General purpose registers(r0-r15): 32-bit * 16 words
