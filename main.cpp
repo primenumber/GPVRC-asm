@@ -16,6 +16,7 @@ enum class TokenType {
   BracketL,
   BracketR,
   Period,
+  EOL,
   Invalid,
 };
 
@@ -103,6 +104,7 @@ std::vector<Token> tokenize(const std::string& line) {
     auto type = is_prefix_of_token(current);
     tokens.push_back({ type, current });
   }
+  tokens.push_back({ TokenType::EOL, {} });
   return tokens;
 }
 
@@ -170,14 +172,10 @@ Instruction generate_no_operands(uint32_t opcode) {
 }
 
 template <typename Iter>
-uint32_t parse_reg(Iter& first, Iter last, const size_t line_number) {
+uint32_t parse_reg(Iter& first, const size_t line_number) {
   using std::size;
   using std::begin;
   using std::end;
-  if (first == last) {
-    std::cerr << "Unexpected EOL at line " << line_number << ", expected Identifier" << std::endl;
-    std::exit(EXIT_FAILURE);
-  }
   auto token = *first++;
   if (token.type != TokenType::Identifier) {
     parse_error_unexpected_token_type(token, { TokenType::Identifier }, line_number);
@@ -202,22 +200,14 @@ uint32_t parse_reg(Iter& first, Iter last, const size_t line_number) {
 }
 
 template <typename Iter>
-uint32_t parse_imm(Iter& first, Iter last, const std::map<std::string, size_t>& labels, const size_t line_number) {
+uint32_t parse_imm(Iter& first, const std::map<std::string, size_t>& labels, const size_t line_number) {
   using std::size;
   using std::begin;
   using std::end;
-  if (first == last) {
-    std::cerr << "Unexpected EOL at line " << line_number << ", expected Number or Period" << std::endl;
-    std::exit(EXIT_FAILURE);
-  }
   auto token = *first++;
   if (token.type == TokenType::Number) {
     return std::stoul(token.str);
   } else if (token.type == TokenType::Period) {
-    if (first == last) {
-      std::cerr << "Unexpected EOL at line " << line_number << ", expected Identifier" << std::endl;
-      std::exit(EXIT_FAILURE);
-    }
     auto token_second = *first++;
     if (token_second.type != TokenType::Identifier) {
       parse_error_unexpected_token_type(token, { TokenType::Identifier }, line_number);
@@ -252,40 +242,40 @@ template <typename Iter>
 Instruction generate(
     const OperandsType op_type,
     const uint32_t op_code,
-    Iter first, Iter last,
+    Iter first,
     const std::map<std::string, size_t>& labels,
     const size_t line_number) {
   using std::size;
   if (op_type == OperandsType::Reg1Imm16) {
-    auto reg = parse_reg(first, last, line_number);
-    auto imm = parse_imm(first, last, labels, line_number);
+    auto reg = parse_reg(first, line_number);
+    auto imm = parse_imm(first, labels, line_number);
     return generate_reg1_imm16(op_code, reg, imm);
   } else if (op_type == OperandsType::Reg2Imm8) {
-    auto reg1 = parse_reg(first, last, line_number);
-    auto reg2 = parse_reg(first, last, line_number);
-    auto imm = parse_imm(first, last, labels, line_number);
+    auto reg1 = parse_reg(first, line_number);
+    auto reg2 = parse_reg(first, line_number);
+    auto imm = parse_imm(first, labels, line_number);
     return generate_reg2_imm8(op_code, reg1, reg2, imm);
   } else if (op_type == OperandsType::Imm16) {
-    auto imm = parse_imm(first, last, labels, line_number);
+    auto imm = parse_imm(first, labels, line_number);
     return generate_imm16(op_code, imm);
   } else if (op_type == OperandsType::Reg3) {
-    auto reg1 = parse_reg(first, last, line_number);
-    auto reg2 = parse_reg(first, last, line_number);
-    auto reg3 = parse_reg(first, last, line_number);
+    auto reg1 = parse_reg(first, line_number);
+    auto reg2 = parse_reg(first, line_number);
+    auto reg3 = parse_reg(first, line_number);
     return generate_reg3(op_code, reg1, reg2, reg3);
   } else if (op_type == OperandsType::Reg1Imm8) {
-    auto reg = parse_reg(first, last, line_number);
-    auto imm = parse_imm(first, last, labels, line_number);
+    auto reg = parse_reg(first, line_number);
+    auto imm = parse_imm(first, labels, line_number);
     return generate_reg1_imm8(op_code, reg, imm);
   } else if (op_type == OperandsType::Reg2) {
-    auto reg1 = parse_reg(first, last, line_number);
-    auto reg2 = parse_reg(first, last, line_number);
+    auto reg1 = parse_reg(first, line_number);
+    auto reg2 = parse_reg(first, line_number);
     return generate_reg2(op_code, reg1, reg2);
   } else if (op_type == OperandsType::Imm8) {
-    auto imm = parse_imm(first, last, labels, line_number);
+    auto imm = parse_imm(first, labels, line_number);
     return generate_imm8(op_code, imm);
   } else if (op_type == OperandsType::Reg1) {
-    auto reg = parse_reg(first, last, line_number);
+    auto reg = parse_reg(first, line_number);
     return generate_reg1(op_code, reg);
   } else if (op_type == OperandsType::Empty) {
     return generate_no_operands(op_code);
@@ -302,10 +292,6 @@ Instruction assemble_impl(
   using std::size;
   using std::begin;
   using std::end;
-  if (size(tokens) < 1) {
-    std::cerr << "Unexpected EOL at line " << line_number << std::endl;
-    std::exit(EXIT_FAILURE);
-  }
   if (tokens.front().type != TokenType::Identifier) {
     parse_error_unexpected_token_type(tokens.front(), { TokenType::Identifier }, line_number);
     std::exit(EXIT_FAILURE);
@@ -385,7 +371,7 @@ Instruction assemble_impl(
   } else {
     std::cerr << "Unknown OpName at line " << line_number << ": " << op << std::endl;
   }
-  return generate(op_type, op_code, std::next(begin(tokens)), end(tokens), labels, line_number);
+  return generate(op_type, op_code, std::next(begin(tokens)), labels, line_number);
   return std::bitset<24>(0);
 }
 
@@ -404,8 +390,8 @@ std::vector<Instruction> assemble(std::istream& is) {
     const auto tokens = tokenize(line);
     if (tokens.empty()) continue;
     else if (tokens.front().type == TokenType::Period) {
-      if (size(tokens) < 2) {
-        std::cerr << "Unexpected EOL at line " << line_number << ", Expected identifier" << std::endl;
+      if (tokens.at(1).type != TokenType::Identifier) {
+        parse_error_unexpected_token_type(tokens.at(1), { TokenType::Identifier }, line_number);
         std::exit(EXIT_FAILURE);
       }
       labels[tokens.at(1).str] = size(instruction_tokens);
