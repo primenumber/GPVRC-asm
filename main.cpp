@@ -41,6 +41,25 @@ std::ostream& operator<<(std::ostream& os, const Token& token) {
   return os << "[ " << token.type << "; " << token.str << " ]";
 }
 
+void parse_error_unexpected_token_type(const Token& got, const std::vector<TokenType>& expected_types, const size_t line_number) {
+  using std::size;
+  std::cerr << "Parse error: unexpected token at line " << line_number << ". expected";
+  size_t N = size(expected_types);
+  if (N == 1) {
+    std::cerr << " " << expected_types.front();
+  } else {
+    for (size_t i = 0; i < N; ++i) {
+      std::cerr << " " << expected_types[i];
+      if (i < N-2) {
+        std::cerr << ",";
+      } else if (i == N-2) {
+        std::cerr << " or";
+      }
+    }
+  }
+  std::cerr << ", but got " << got.type << std::endl;
+}
+
 TokenType is_prefix_of_token(const std::string& str) {
   using std::size;
   if (str.empty()) return TokenType::Empty;
@@ -161,7 +180,7 @@ uint32_t parse_reg(Iter& first, Iter last, const size_t line_number) {
   }
   auto token = *first++;
   if (token.type != TokenType::Identifier) {
-    std::cerr << "Unexpected Token at line " << line_number << ", expected Identifier, but got " << token << std::endl;
+    parse_error_unexpected_token_type(token, { TokenType::Identifier }, line_number);
     std::exit(EXIT_FAILURE);
   }
   const auto& reg_str = token.str;
@@ -201,7 +220,7 @@ uint32_t parse_imm(Iter& first, Iter last, const std::map<std::string, size_t>& 
     }
     auto token_second = *first++;
     if (token_second.type != TokenType::Identifier) {
-      std::cerr << "Unexpected Token at line " << line_number << ", expected Identifier, but got " << token_second << std::endl;
+      parse_error_unexpected_token_type(token, { TokenType::Identifier }, line_number);
       std::exit(EXIT_FAILURE);
     }
     auto itr = labels.find(token_second.str);
@@ -211,7 +230,7 @@ uint32_t parse_imm(Iter& first, Iter last, const std::map<std::string, size_t>& 
     }
     return itr->second;
   } else {
-    std::cerr << "Unexpected Token at line " << line_number << ", expected Number or Period, but got " << token << std::endl;
+    parse_error_unexpected_token_type(token, { TokenType::Number, TokenType::Period }, line_number);
     std::exit(EXIT_FAILURE);
   }
 }
@@ -288,7 +307,7 @@ Instruction assemble_impl(
     std::exit(EXIT_FAILURE);
   }
   if (tokens.front().type != TokenType::Identifier) {
-    std::cerr << "Unexpected Token at line " << line_number << ", expected Identifier, but got " << tokens.front() << std::endl;
+    parse_error_unexpected_token_type(tokens.front(), { TokenType::Identifier }, line_number);
     std::exit(EXIT_FAILURE);
   }
   auto op = tokens.front().str;
