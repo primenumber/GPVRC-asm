@@ -19,11 +19,11 @@ Data memory address space: 16,777,216 words
 
 ### register * 3
 
-encoding: 1110 xxxx xxxx aaaa bbbb cccc
-x: op code
-a: destination register
-b: source register 1
-c: source register 2
+encoding: 1110 xxxx xxxx aaaa bbbb cccc  
+x: op code  
+a: destination register  
+b: source register 1  
+c: source register 2  
 
 |op name|op code|description|
 |:-----:|:-----:|:---------:|
@@ -36,11 +36,11 @@ c: source register 2
 
 ### register * 2 + 8-bit immediate
 
-encoding: 1100 xxxx aaaa bbbb iiii iiii
-x: op code
-a: destination register
-b: source register
-i: immediate
+encoding: 1100 xxxx aaaa bbbb iiii iiii  
+x: op code  
+a: destination register  
+b: source register  
+i: immediate  
 
 |op name|op code|description|
 |:-----:|:-----:|:---------:|
@@ -51,10 +51,10 @@ i: immediate
 
 ### register * 2
 
-encoding: 1111 10xx xxxx xxxx aaaa bbbb
-x: op code
-a: register 1
-b: register 2
+encoding: 1111 10xx xxxx xxxx aaaa bbbb  
+x: op code  
+a: register 1  
+b: register 2  
 
 |op name|op code|description|
 |:-----:|:-----:|:---------:|
@@ -67,10 +67,10 @@ b: register 2
 
 ### register * 1 + 16-bit immediate
 
-encoding: xxxx aaaa iiii iiii iiii iiii
-x: op code, xxxx != 11xx
-a: register
-i: immediate
+encoding: xxxx aaaa iiii iiii iiii iiii  
+x: op code, xxxx != 11xx  
+a: register  
+i: immediate  
 
 |op name|op code|description|
 |:-----:|:-----:|:---------:|
@@ -80,16 +80,16 @@ i: immediate
 
 ### register * 1 + 8-bit immediate
 
-encoding: 1111 0xxx xxxx aaaa iiii iiii
-x: op code
-a: register
-i: immediate
+encoding: 1111 0xxx xxxx aaaa iiii iiii  
+x: op code  
+a: register  
+i: immediate  
 
 ### register * 1
 
-encoding: 1111 1110 xxxx xxxx xxxx aaaa
-x: op code
-a: register
+encoding: 1111 1110 xxxx xxxx xxxx aaaa  
+x: op code  
+a: register  
 
 |op name|op code|description|
 |:-----:|:-----:|:---------:|
@@ -98,9 +98,9 @@ a: register
 
 ### 16-bit immediate
 
-encoding: 1101 xxxx iiii iiii iiii iiii
-x: op code
-i: immediate
+encoding: 1101 xxxx iiii iiii iiii iiii  
+x: op code  
+i: immediate  
 
 |op name|op code|description|
 |:-----:|:-----:|:---------:|
@@ -108,14 +108,14 @@ i: immediate
 
 ### 8-bit immediate
 
-encoding: 1111 110x xxxx xxxx iiii iiii
-x: op code
-i: immediate
+encoding: 1111 110x xxxx xxxx iiii iiii  
+x: op code  
+i: immediate  
 
 ### no operands
 
-encoding: 1111 1111 xxxx xxxx xxxx xxxx
-x: op code
+encoding: 1111 1111 xxxx xxxx xxxx xxxx  
+x: op code  
 
 |op name|op code|description|
 |:-----:|:-----:|:---------:|
