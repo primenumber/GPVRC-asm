@@ -15,6 +15,18 @@ Data word length: 32-bit
 Data memory address space: 16,777,216 words  
 (global memory: 8,388,608 words(0x800000-0xffffff), local memory: 2000 words/core(0x030-0x7ff))
 
+## GPVRC-asm
+
+This software generates GPVRC machine binary as texture (256x256).
+
+Dependencies: png++
+
+### Usage
+
+```shell
+$ ./gpvrc-asm examples/test.asm test.png
+```
+
 ## Instruction set reference
 
 ### register * 3
