@@ -7,12 +7,12 @@ General purpose parallel computing platform for VRChat World/Avatar
 
 Harvard architecture
 
-Instruction length: 24-bit, RGB pixel (R is LSB-side, B is MSB-side)
-Instruction memory address space: 65,536 insts
+Instruction length: 24-bit, RGB pixel (R is LSB-side, B is MSB-side)  
+Instruction memory address space: 65,536 insts  
 
-General purpose registers(r0-r15): 32-bit * 16 words
-Data word length: 32-bit
-Data memory address space: 16,777,216 words
+General purpose registers(r0-r15): 32-bit * 16 words  
+Data word length: 32-bit  
+Data memory address space: 16,777,216 words  
 (global memory: 8,388,608 words(0x800000-0xffffff), local memory: 2000 words/core(0x030-0x7ff))
 
 ## Instruction set reference
