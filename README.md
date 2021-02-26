@@ -1,6 +1,8 @@
 GPVRC(General Purpose VRChat) assembler
 ====
 
+General purpose parallel computing platform for VRChat World/Avatar
+
 ## GPVRC Machine overview
 
 Harvard architecture
