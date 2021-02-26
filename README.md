@@ -28,6 +28,7 @@ c: source register 2
 |add|0000 0000|Integer addition|
 |sub|0000 0001|Integer subtraction|
 |umul|0000 0010|Unsigned integer multiplication|
+|imul|0000 0011|Signed integer multiplication|
 |udiv|0000 0100|Unsigned integer division|
 |umod|0000 0110|Unsigned integer modulaion|
 
@@ -60,6 +61,7 @@ b: register 2
 |jez|00 0001 0000|jump if reg `a` equal to zero, register address `b`|
 |jnz|00 0001 0001|jump if reg `a` not equal to zero, register address `b`|
 |not|01 0000 0000|set logical not of `b` to `a`|
+|neg|01 0000 0001|set negate of `b` to `a`|
 
 ### register * 1 + 16-bit immediate
 
